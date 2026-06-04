@@ -1,0 +1,2 @@
+学习了Python函数
+学习了List

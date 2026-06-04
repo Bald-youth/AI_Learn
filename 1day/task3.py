@@ -1,0 +1,6 @@
+name = input("请输入名字")
+age = input("请输入年龄")
+job = input("请输入职业")
+print(f"你好，我叫{name}")
+print(f"今年{age}岁")
+print(f"职业是{job}")
