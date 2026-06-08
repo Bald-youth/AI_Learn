@@ -78,6 +78,23 @@
 * 阿里百炼（Qwen）
 
 ---
+AI ChatBot Web V1
+
+功能：
+- Streamlit网页界面
+- Qwen API
+- 用户提问
+- AI回答
+
+
+AI ChatBot Web V2
+
+功能：
+- AI聊天
+- 上下文记忆
+- 系统角色
+- 聊天记录下载
+- 聊天记录清空
 
 ## 学习原则
 
