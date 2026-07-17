@@ -191,6 +191,20 @@ if st.sidebar.button("清除"):
     # 刷新页面
     st.rerun()
 
+# 角色字典
+
+ROLE_PROMPTS = {
+    "Python导师":"...",
+
+    "AI面试官": "...",
+
+    "代码审查专家": "...",
+
+    "AI产品经理": "..."
+}
+
+st.sidebar.selectbox("请选择AI角色",list(ROLE_PROMPTS.keys()))
+
 
 # ==========================
 # 显示聊天记录
