@@ -1,7 +1,13 @@
 import streamlit as st
-from ai import chat_with_ai
+from ai import chat_with_ai_stream
 from utils import build_chat_history_text
 from prompts import ROLE_PROMPTS
+
+MODEL_OPTIONS = {
+    "qwen3.7-max": "qwen3.7-max-2026-05-20",
+    "qwen3.7-plus": "qwen3.7-plus-2026-05-26",
+    "qwen3.7-flash": "qwen3.7-flash-2026-07-15",
+}
 
 # ==========================
 # 页面配置
@@ -34,6 +40,40 @@ role = st.sidebar.selectbox(
 
 st.sidebar.success(f"当前角色：{role}")
 system_prompt = ROLE_PROMPTS[role]
+
+# ==========================
+# 选择模型
+# ==========================
+selected_model_label = st.sidebar.selectbox(
+    "请选择模型",
+    list(MODEL_OPTIONS.keys())
+)
+model_name = MODEL_OPTIONS[selected_model_label]
+st.sidebar.caption(f"当前模型：{model_name}")
+
+# ==========================
+# temperature 选择
+# ==========================
+temperature = st.sidebar.slider(
+    "Temperature",
+    min_value=0.0,
+    max_value=1.0,
+    value=0.7,
+    step=0.1,
+    format="%.1f"
+)
+# ==========================
+# max_tokens 选择
+# ==========================
+max_tokens = st.sidebar.slider(
+    "Max Tokens",
+    min_value=128,
+    max_value=4096,
+    value=1024,
+    step=128
+)
+
+
 
 # ==========================
 # 初始化聊天状态
@@ -117,16 +157,24 @@ if question:
     )
 
     # 调用 AI
-    answer = chat_with_ai(
-        st.session_state.messages
-    )
+
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_answer = ""
+        for chunk in chat_with_ai_stream(
+            st.session_state.messages,
+            model_name,
+            temperature,
+            max_tokens
+        ):
+            full_answer += chunk
+            message_placeholder.markdown(full_answer + "▌")
 
     # 保存 AI 回复
     st.session_state.messages.append(
         {
             "role": "assistant",
-            "content": answer
+            "content": full_answer
         }
     )
-
     st.rerun()
